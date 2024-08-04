@@ -38,7 +38,7 @@ function draw() {
     fill(0);
     textSize(50);
     textAlign(CENTER, CENTER);
-    text("\\" + chat.text + "/", mouseX , mouseY/2 + chat.life * 0.05 +50);
+    text("\\" + chat.text + "/", mouseX , mouseY/2 + chat.life * 0.1 +50);
     chat.life -= 1;
   }
   else {

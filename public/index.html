@@ -60,14 +60,14 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
   item.textContent = `${msg.text}(from${msg.name})`;
   item.style.color = msg.color;
   document.getElementById('messages').appendChild(item);
-  window.scrollTo(0, document.body.scrollHeight);
+  //window.scrollTo(0, document.body.scrollHeight);
 
   chats.push({
     text: msg.text,
     name: msg.name,
     x: random(width),
     y: random(height),
-    life: 511
+    life: 1023
   }
 )
 
