@@ -98,7 +98,7 @@ function draw() {
 
   for (let chat of chats) {
     if (chat.life > 0) {
-    fill(0);
+    fill(0,0,0,chat.life/4);
     textSize(50);
     textAlign(CENTER, CENTER);
     text("\\" + chat.text + "/", mouseX , mouseY/2 + chat.life * 0.1 - 50);
