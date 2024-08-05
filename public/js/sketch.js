@@ -13,6 +13,25 @@ function setup() {
 
 
 
+let chats = [];
+
+
+socket.on('chat message', function(msg) {//socket.onは送信がされたら＝受信
+  var item = document.createElement('li');
+  item.textContent = `${msg.text}(from${msg.name})`;
+  item.style.color = msg.color;
+  document.getElementById('messages').appendChild(item);
+  //window.scrollTo(0, document.body.scrollHeight);
+
+  chats.push({
+    text: msg.text,
+    name: msg.name,
+    life: 1023
+  })
+});
+
+
+
 function draw() {
   // 描画処理
  //clear();  // これを入れないと下レイヤーにあるビデオが見えなくなる
@@ -27,12 +46,18 @@ function draw() {
       for (let landmark of landmarks) {
         fill(0);
         noStroke();
-        circle(mouseX + (landmark.x * width/2) - width/4, mouseY/2 + (landmark.y * height/2) , 6);
-        
+        let plotx = mouseX + (landmark.x * width/2) - width/4;
+        let ploty = mouseY/2 + (landmark.y * height/2);
+        circle(plotx , ploty , 6);
+        //socket.emit('get_plot', {x: plotx, y: ploty});
       }
     }
   }
   
+
+  
+
+
   for (let chat of chats) {
     if (chat.life > 0) {
     fill(0);

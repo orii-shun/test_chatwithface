@@ -18,6 +18,12 @@ io.on('connection', (socket) => {
         io.emit('chat message', msg);
     });
 
+    socket.on('get_plot', function(data) {
+        console.log('gotplot',data);
+        io.emit('get_plot', data);
+    });
+
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
