@@ -12,6 +12,36 @@ function setup() {
 }
 
 
+var socket = io();
+var form = document.getElementById('form');
+var input = document.getElementById('input');//input.valueに入力されたテキストが入ってる
+var username = document.getElementById('username');
+
+function send() {
+  if (input.value) {
+    socket.emit(
+      'chat message',
+       {
+         text: input.value,
+         color: '#FF0000',
+         name: username.value
+       }
+      );//socket.emitが送信
+    input.value = '';
+  }
+}
+
+
+
+// Enterキーでsend()関数を呼び出す
+input.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        send();
+      }
+    });
+
+
 
 let chats = [];
 
@@ -19,9 +49,16 @@ let chats = [];
 socket.on('chat message', function(msg) {//socket.onは送信がされたら＝受信
   var item = document.createElement('li');
   item.textContent = `${msg.text}(from${msg.name})`;
-  item.style.color = msg.color;
-  document.getElementById('messages').appendChild(item);
-  //window.scrollTo(0, document.body.scrollHeight);
+  var messages = document.getElementById('messages');
+  
+  // メッセージを追加
+  messages.appendChild(item);
+
+  // メッセージが4つ以上の場合、一番古いメッセージを削除
+  if (messages.children.length > 5) {
+    messages.removeChild(messages.children[0]);
+  }
+
 
   chats.push({
     text: msg.text,

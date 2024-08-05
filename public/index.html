@@ -7,7 +7,7 @@
 
   <style>
     body { font-family: Arial, sans-serif; }
-    ul { list-style-type: none; padding: 0; }
+    ul { list-style-type: none; padding: 0;  }
     li { padding: 8px; margin-bottom: 10px; background-color: #f2f2f2; border-radius: 5px; }
     #form { display: flex; }
     #input { flex: 1; padding: 10px; }
@@ -20,7 +20,9 @@
     <h1>chat with face</h1>
     <p id="message"></p>
 
-
+    <button id="webcamButton" disabled>
+      ENABLE WEBCAM
+    </button>
  
 <p>UserName</p>
 <input id ="username" placeholder="UserName" value="匿名" autocomplete="off" />
@@ -30,72 +32,14 @@
 
 
 
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-var socket = io();
-var form = document.getElementById('form');
-var input = document.getElementById('input');//input.valueに入力されたテキストが入ってる
-var username = document.getElementById('username');
-
-function send() {
-  if (input.value) {
-    socket.emit(
-      'chat message',
-       {
-         text: input.value,
-         color: '#FF0000',
-         name: username.value
-       }
-      );//socket.emitが送信
-    input.value = '';
-  }
-}
-
-
-
-// Enterキーでsend()関数を呼び出す
-input.addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        send();
-      }
-    });
-
-</script>
-
-   
- 
-
-      <div class="container-sm">
-        <div class="row">
-          <div class="col">
-            <div class="card">
-              <div class="card-body">
-    <button id="webcamButton" disabled>
-      ENABLE WEBCAM
-    </button>
     <div style="position: relative;">
       <video id="webcam" style="position:absolute;left:0px;top:0px;width:100%;height:auto" autoplay playsinline></video>
       <div id="canvas" style="position:absolute;left:0px;top:0px">
       </div>
     </div>
-  </div>
-</div>
-</div>
-</div>
-</div>
-
-  
-
-
-
-
-
-
-
-
-
+    
+ 
+    <script src="/socket.io/socket.io.js"></script>
     <!-- include js libraries -->
     <script src="./js/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="./js/hands.js" crossorigin="anonymous"></script>
