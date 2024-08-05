@@ -5,7 +5,6 @@ function setup() {
   p5canvas.parent('#canvas');
   adjustCanvas();
 
-  // お顔が見つかると以下の関数が呼び出される．resultsに検出結果が入っている．
   gotFaces = function (results) {
     face_results = results;
     adjustCanvas();
@@ -46,7 +45,6 @@ input.addEventListener('keypress', function(event) {
 
 let chats = [];
 
-
 socket.on('chat message', function(msg) {//socket.onは送信がされたら＝受信
   var item = document.createElement('li');
   item.textContent = `${msg.text}(from${msg.name})`;
@@ -54,11 +52,10 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
   
   messages.appendChild(item);
 
-  // メッセージが4つ以上の場合、一番古いメッセージを削除
+  // メッセージが6つ以上の場合、一番古いメッセージを削除
   if (messages.children.length > 5) {
     messages.removeChild(messages.children[0]);
   }
-
 
   chats.push({
     text: msg.text,
@@ -68,23 +65,23 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
 });
 
 
+
+//Help!!
+//ここからの処理に問題がありそう。
 let plots = [];
 
 socket.on('get_plot', function(data) {
-  plots = [];
+  plots = []; //'get_plot'を受信する度に初期化してしまっているから二人以上同時にプロットができない
   plots.push(...data);
 });
 
 
 
 function draw() {
-  // 描画処理
- //clear();  // これを入れないと下レイヤーにあるビデオが見えなくなる
+ //clear();
   background(255);
 
-  // 各頂点座標を表示する
-  // 各頂点座標の位置と番号の対応は以下のURLを確認
-  // https://developers.google.com/mediapipe/solutions/vision/pose_landmarker
+
   if (face_results) {
     let myfaceplots = [];
     console.log(face_results);
