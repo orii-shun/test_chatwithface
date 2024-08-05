@@ -88,8 +88,9 @@ function draw() {
   if (face_results) {
     let myfaceplots = [];
     console.log(face_results);
+    myfaceplots = [];
     for (let landmarks of face_results.faceLandmarks) {
-      myfaceplots = [];
+      
       for (let landmark of landmarks) {
         fill(0);
         noStroke();
@@ -98,14 +99,16 @@ function draw() {
         //circle(plotx , ploty , 6);
         myfaceplots.push({x: plotx, y: ploty});
       }
-      socket.emit('get_plot', myfaceplots);
+      
     }
+    socket.emit('get_plot', myfaceplots);
   }
 
   for (let plot of plots) {
     fill(0,0,0,100);
     circle(plot.x, plot.y, 6);
   }
+  //plots = [];
   
 
   
