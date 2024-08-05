@@ -3,6 +3,7 @@ let face_results;
 function setup() {
   let p5canvas = createCanvas(400, 400);
   p5canvas.parent('#canvas');
+  adjustCanvas();
 
   // お顔が見つかると以下の関数が呼び出される．resultsに検出結果が入っている．
   gotFaces = function (results) {
@@ -100,7 +101,7 @@ function draw() {
     fill(0);
     textSize(50);
     textAlign(CENTER, CENTER);
-    text("\\" + chat.text + "/", mouseX , mouseY/2 + chat.life * 0.1 +50);
+    text("\\" + chat.text + "/", mouseX , mouseY/2 + chat.life * 0.1 - 50);
     chat.life -= 1;
   }
   else {
