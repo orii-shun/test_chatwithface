@@ -52,7 +52,6 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
   item.textContent = `${msg.text}(from${msg.name})`;
   var messages = document.getElementById('messages');
   
-  // メッセージを追加
   messages.appendChild(item);
 
   // メッセージが4つ以上の場合、一番古いメッセージを削除
@@ -69,6 +68,14 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
 });
 
 
+let plots = [];
+
+socket.on('get_plot', function(data) {
+  plots = [];
+  plots.push(...data);
+});
+
+
 
 function draw() {
   // 描画処理
@@ -79,17 +86,25 @@ function draw() {
   // 各頂点座標の位置と番号の対応は以下のURLを確認
   // https://developers.google.com/mediapipe/solutions/vision/pose_landmarker
   if (face_results) {
+    let myfaceplots = [];
     console.log(face_results);
     for (let landmarks of face_results.faceLandmarks) {
+      myfaceplots = [];
       for (let landmark of landmarks) {
         fill(0);
         noStroke();
         let plotx = mouseX + (landmark.x * width/2) - width/4;
         let ploty = mouseY/2 + (landmark.y * height/2);
-        circle(plotx , ploty , 6);
-        //socket.emit('get_plot', {x: plotx, y: ploty});
+        //circle(plotx , ploty , 6);
+        myfaceplots.push({x: plotx, y: ploty});
       }
+      socket.emit('get_plot', myfaceplots);
     }
+  }
+
+  for (let plot of plots) {
+    fill(0,0,0,100);
+    circle(plot.x, plot.y, 6);
   }
   
 
