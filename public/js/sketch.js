@@ -21,11 +21,10 @@ function send() {
   if (input.value) {
     socket.emit(
       'chat message',
-       {
-         text: input.value,
+       { text: input.value,
          color: '#FF0000',
-         name: username.value
-       }
+         name: username.value,
+         id: socket.id}
       );//socket.emitが送信
     input.value = '';
   }
@@ -60,7 +59,8 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
   chats.push({
     text: msg.text,
     name: msg.name,
-    life: 1023
+    life: 1023,
+    id: msg.id
   })
 });
 
@@ -71,8 +71,11 @@ socket.on('chat message', function(msg) {//socket.onは送信がされたら＝�
 let plots = [];
 
 socket.on('get_plot', function(data) {
-  plots = []; //'get_plot'を受信する度に初期化してしまっているから二人以上同時にプロットができない
-  plots.push(...data);
+  if (data.some(plot => plot.id === socket.id)) {
+    plots = [];
+  }
+  //plots = []; //本当はdataに含まれているidがsocket.idと一致するときに初期化したい
+   plots.push(...data);
 });
 
 
@@ -89,23 +92,37 @@ function draw() {
     for (let landmarks of face_results.faceLandmarks) {
       
       for (let landmark of landmarks) {
-        fill(0);
-        noStroke();
-        let plotx = mouseX + (landmark.x * width/2) - width/4;
-        let ploty = mouseY/2 + (landmark.y * height/2);
+        //fill(0);
+        //noStroke();
         //circle(plotx , ploty , 6);
-        myfaceplots.push({x: plotx, y: ploty});
+
+        //let plotx = mouseX + (landmark.x * width/2) - width/4;
+        //let ploty = mouseY/2 + (landmark.y * height/2);
+        myfaceplots.push({x: landmark.x, y: landmark.y, mx: mouseX, my: mouseY , id: socket.id});
       }
       
     }
-    socket.emit('get_plot', myfaceplots);
+    myfaceplots.push({id: socket.id});
+    socket.emit('get_plot', myfaceplots );
+  }
+  else{
+  plots = [];
   }
 
   for (let plot of plots) {
-    fill(0,0,0,100);
-    circle(plot.x, plot.y, 6);
+    fill(100,100,100,100);
+    //circle(plot.x, plot.y, 6);
+    if (plot.id  !=  socket.id) {
+      circle(plot.mx + (plot.x * width/2) - width/4, plot.my/2 + (plot.y * height/2),6);
+    }
+
+    if (plot.id  ==  socket.id) {
+      fill(0,0,0,100);
+      circle(plot.mx + (plot.x * width/2) - width/4, plot.my/2 + (plot.y * height/2),6);
+     
+    }
   }
-  //plots = [];
+  
   
 
   
